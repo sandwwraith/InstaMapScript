@@ -62,7 +62,7 @@ function getPictures(arr,lat,longt) {
     for (var i = 0; i < urls.length && i < 10; i++) {
         res += '<a href="' + arr[i].link + '" target="_blank"><img class="theImg" title="' + arr[i].likes.count + ' Likes" src=' + urls[i].url + '></img></a>';
     }
-    
+
     //Adding tags
     var popular = getTags(arr);
     var tgs = [];
