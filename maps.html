@@ -17,6 +17,7 @@
     <script type="text/javascript">
       var map;
       var opened_info_window;
+      var opened_circle;        //TODO: not good global vars, refactor
       function addImage(lat, lng, contentString) {
             var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
                                                   animation: google.maps.Animation.DROP,
@@ -27,10 +28,21 @@
                 content: contentString
             });
 
+            var circle = new google.maps.Circle({center: marker.getPosition(),
+                                    map: map,
+                                    radius: 1000,
+                                    visible: false})
+
             google.maps.event.addListener(marker, 'click', function() {
+                google.maps.event.addListener(infowindow, 'closeclick', function() {
+                    circle.setVisible(false)
+                })
                 close_info_window()
-                infowindow.open(map, marker);
+                infowindow.open(map, marker)
                 opened_info_window = infowindow
+                opened_circle = circle
+                circle.setVisible(true)
+                map.panTo(marker.getPosition())
             });
             return marker
       }
@@ -38,6 +50,8 @@
       function close_info_window() {
             if (opened_info_window !== undefined)
                 opened_info_window.close();
+            if (opened_circle !== undefined)
+                opened_circle.setVisible(false);
       }
 
       function initialize() {
