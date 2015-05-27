@@ -31,7 +31,9 @@
     <script src="instagram.js"></script>
     <script type="text/javascript">
         $(function() {
-            $( document ).tooltip();
+            $( document ).tooltip({
+                position: {my: "center top+15", at: "center bottom", collision: "flipfit"}
+            });
         });
 
         var map;
