@@ -1,20 +1,20 @@
 //------ Workaround
-function gett(lat, longt) {
+function gett(lat, longt, callF) {
     var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&client_id=73e1055ac2ad4799887538583f2249ef";
     $.ajax({
         url: url,
         type: "GET",
         async:true,
         dataType: "jsonp",
-        success: callBackk(lat,longt),
+        success: callBackk(lat,longt,callF),
         error: show_error
     });
 }
 
-function callBackk(lat,longt) {
+function callBackk(lat,longt,callF) {
 
     return function (data, testStatus, request) {
-        getPictures(data,lat,longt);
+        getPictures(data,lat,longt,callF);
     };
 
 }
@@ -37,34 +37,31 @@ function bubblesort(arr) {
     }
 }
 
-function getPictures(arr,lat,longt) {
+function getPictures(arr,lat,longt,callF) {
     if (arr.meta.code!=200) show_error();
     arr = arr.data;
-    //alert(arr.length);
     var urls = [];
     console.log(arr.length);
-
     bubblesort(arr);
-    //alert(arr[0].likes.count);
+    
     for (var i = 0;i<arr.length;i++) {
         urls[i] = arr[i].images.low_resolution;
         console.log(urls[i].url);
         console.log(arr[i].likes.count)
     }
-    //$('#theDiv').prepend($('<img>',{id:'theImg',src:urls[0].url}))
-    for (var i = 0; i< 7; i++) {
+    /*for (var i = 0; i< 7; i++) {
         $('#theDiv').append($('<img>',{class:'theImg',src:urls[i].url, title: arr[i].likes.count + " Likes"}))
-    }
+    }*/
 
     var popular = getTags(arr);
     var tgs = [];
     //var str = "#" + popular[0][0] + " (" + popular[0][1]+ ")";
     for (var i = 0;i<popular.length;i++) {
-        tgs[i] = "#" + popular[i][0] + " (" + popular[i][1]+")"
+        tgs[i] = "#" + popular[i][0] + " (" + popular[i][1]+")";
     }
 
-
-    $('table').append("<tr><td>Most polpular tags: " + tgs.slice(0,4).join(", ") + "</td></tr>")
+    callF(lat,longt,urls[0].url);
+    //$('table').append("<tr><td>Most polpular tags: " + tgs.slice(0,4).join(", ") + "</td></tr>")
     //$('body').append($('<img>',{class:'theImg',src:urls[1].url}))
     //$('body').append($('<img>',{class:'theImg',src:urls[2].url}))
 }
@@ -81,15 +78,6 @@ function getTags(arr) {
             }
         }
     }
-    //Searching popular
-    /*var max = -1;
-    var str = "No popular";
-    for (var cc in gtags) {
-        if (gtags[cc] > max) {
-            max = gtags[cc];
-            str = cc;
-        }
-    };*/
 
 var sortable = [];
 for (var vehicle in gtags)
@@ -99,5 +87,4 @@ for (var vehicle in gtags)
 }
 
 //alert(10);
-gett(48.858844,2.294351);
-
+//gett(48.858844,2.294351);
