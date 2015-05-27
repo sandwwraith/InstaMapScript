@@ -3,35 +3,42 @@
   <head>
     <style type="text/css">
       html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
-	  .theImg {
-			margin: 10px;
-			width: 12%;
-	  }
-	  .pretty {
-			text-align:center;
-	  }
+      .theImg {
+            margin: 10px;
+            width: 12%;
+      }
+      .pretty {
+            text-align:center;
+      }
     </style>
-	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJP2vvnMfxREJGAEPDQbEuno9njArzWSY"></script>
-	<script src="instagram.js"></script>
+    <script src="instagram.js"></script>
     <script type="text/javascript">
-	  var map;
-	  function addImage(lat, lng, img_src) {
-	  		var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
-												  animation: google.maps.Animation.DROP,
-												  map: map,
-												  })
-			var contentString = '<img src=' + img_src + '></img>'
+      var map;
+      var opened_info_window;
+      function addImage(lat, lng, contentString) {
+            var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
+                                                  animation: google.maps.Animation.DROP,
+                                                  map: map,
+                                                  })
 
-			var infowindow = new google.maps.InfoWindow({
-				content: contentString
-			});
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
 
-			google.maps.event.addListener(marker, 'click', function() {
-				infowindow.open(map, marker);
-			});
-			return marker
-	  }
+            google.maps.event.addListener(marker, 'click', function() {
+                close_info_window()
+                infowindow.open(map, marker);
+                opened_info_window = infowindow
+            });
+            return marker
+      }
+
+      function close_info_window() {
+            if (opened_info_window !== undefined)
+                opened_info_window.close();
+      }
 
       function initialize() {
         var mapOptions = {
@@ -41,11 +48,12 @@
         map = new google.maps.Map(document.getElementById('map-canvas'),
             mapOptions);
 
-		google.maps.event.addListener(map, 'click', function(pos) {
-			var x = pos.latLng.lat()
-			var y = pos.latLng.lng()
-			var marker = gett(x, y, addImage)
-		});
+        google.maps.event.addListener(map, 'click', function(pos) {
+            var x = pos.latLng.lat()
+            var y = pos.latLng.lng()
+            close_info_window()
+            gett(x, y, addImage)
+        });
       }
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
