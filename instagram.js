@@ -1,6 +1,6 @@
 //------ Workaround
 function gett(lat, longt, func) {
-    var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&client_id=73e1055ac2ad4799887538583f2249ef";
+    var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&distance=2000&client_id=73e1055ac2ad4799887538583f2249ef";
     $.ajax({
         url: url,
         type: "GET",
