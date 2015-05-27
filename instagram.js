@@ -24,11 +24,11 @@ function callBackk(lat,longt, func) {
 }
 
 function show_error() {
-    alert("BANG");
+    alert("Something went wrong, sorry....");
 }
 
 //-----------
-function heapsort(mass) {
+function bubblesort(mass) {
     var arr = mass;
     for (var i = 0;i<arr.length;i++) {
         for (var j = 0; j<arr.length - i - 1; j++) {
@@ -43,36 +43,33 @@ function heapsort(mass) {
 
 function getPictures(arr,lat,longt) {
     if (arr.meta.code!=200) {
-        //show_error();
         return -1;
     }
     arr = arr.data;
     if (arr.length == 0)
         return -1;
-
     var urls = [];
-    console.log(arr.length);
+    console.log("Total pictures: " + arr.length);
 
-    heapsort(arr);
+    bubblesort(arr);
 
     for (var i = 0;i<arr.length;i++) {
         urls[i] = arr[i].images.low_resolution;
     }
-
-    var res = '<table><tr><td class="theDiv">'
-    //$('#theDiv').prepend($('<img>',{id:'theImg',src:urls[0].url}))
+    
+    //Adding imgs
+    var res = '<table><tr><td class="theDiv">';
     for (var i = 0; i < urls.length && i < 10; i++) {
-        res += '<a href="' + arr[i].link + '" target="_blank"><img class="theImg" title="' + arr[i].likes.count + ' Likes" src=' + urls[i].url + '></img></a>'
+        res += '<a href="' + arr[i].link + '" target="_blank"><img class="theImg" title="' + arr[i].likes.count + ' Likes" src=' + urls[i].url + '></img></a>';
     }
-
-
+    
+    //Adding tags
     var popular = getTags(arr);
     var tgs = [];
     for (var i = 0;i<popular.length;i++) {
         tgs[i] = "#" + popular[i][0] + " (" + popular[i][1]+")";
     }
     
-    //var str = "#" + popular[0][0] + " (" + popular[0][1]+ ")";
     res += '</td><tr><td>Most popular tags: ' + tgs.slice(0,4).join(", ") + '</td><tr>';
     return res;
 }
@@ -89,19 +86,10 @@ function getTags(arr) {
             }
         }
     }
-    //Searching popular
-    /*var max = -1;
-    var str = "No popular";
-    for (var cc in gtags) {
-        if (gtags[cc] > max) {
-            max = gtags[cc];
-            str = cc;
-        }
-    };*/
 
-var sortable = [];
-for (var vehicle in gtags)
-    sortable.push([vehicle, gtags[vehicle]]);
-    sortable.sort(function(a, b) {return b[1] - a[1]})
-    return sortable;
+    var sortable = [];
+    for (var vehicle in gtags)
+        sortable.push([vehicle, gtags[vehicle]]);
+        sortable.sort(function(a, b) {return b[1] - a[1]})
+        return sortable;
 }
