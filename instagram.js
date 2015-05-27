@@ -49,17 +49,19 @@ function getPictures(arr,lat,longt) {
     arr = arr.data;
     if (arr.length == 0)
         return -1;
+
     var urls = [];
     console.log(arr.length);
 
     heapsort(arr);
+
     for (var i = 0;i<arr.length;i++) {
         urls[i] = arr[i].images.low_resolution;
     }
 
     var res = '<table><tr><td class="theDiv">'
     //$('#theDiv').prepend($('<img>',{id:'theImg',src:urls[0].url}))
-    for (var i = 0; i< 7; i++) {
+    for (var i = 0; i< urls.length; i++) {
         res += '<a href="' + urls[i].url + '"><img class="theImg" src=' + urls[i].url + '></img></a>'
     }
 
