@@ -30,8 +30,11 @@
 
             var circle = new google.maps.Circle({center: marker.getPosition(),
                                     map: map,
-                                    radius: 1000,
-                                    visible: false})
+                                    radius: 2000,
+                                    visible: false,
+                                    fillColor: 'gray',
+                                    strokeWeight: 3,
+                                    strokeOpacity: 0.5})
 
             google.maps.event.addListener(marker, 'click', function() {
                 google.maps.event.addListener(infowindow, 'closeclick', function() {
@@ -59,8 +62,7 @@
           center: { lat: 59.956406877802756, lng: 30.30924081802368},
           zoom: 12
         };
-        map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions);
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions)
 
         google.maps.event.addListener(map, 'click', function(pos) {
             var x = pos.latLng.lat()
