@@ -1,102 +1,21 @@
 <!DOCTYPE html>
 <html>
+  
   <head>
+    <title>Insta Map (Work in progress)</title>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <title>Insta Map Script</title>
     <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
-    <style type="text/css">
-      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
-      .theImg {
-            margin: 10px;
-            width: 16%;
-      }
-      .pretty {
-            text-align:center;
-      }
-      .likes_pop {
-            display: none;
-      }
-      label {
-        display: inline-block;
-        width: 5em;
-      }
-      body {
-    font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
-    font-size: 62.5%;
-}
-    </style>
+    <link rel="stylesheet" href="stylez.css">
     <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJP2vvnMfxREJGAEPDQbEuno9njArzWSY"></script>
-    <script src="instagram.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $( document ).tooltip({
-                position: {my: "center top+15", at: "center bottom", collision: "flipfit"}
-            });
-        });
-
-        var map;
-        var opened_info_window;
-        var opened_circle;        //TODO: not good global vars, refactor
-        function addImage(lat, lng, contentString) {
-            var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
-                                                  animation: google.maps.Animation.DROP,
-                                                  map: map,
-                                                  })
-
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-
-            var circle = new google.maps.Circle({center: marker.getPosition(),
-                                    map: map,
-                                    radius: 2000,
-                                    visible: false,
-                                    fillColor: '#33B5E5',
-                                    strokeColor: '#0099CC',
-                                    strokeWeight: 2,
-                                    strokeOpacity: 0.8})
-
-            google.maps.event.addListener(marker, 'click', function() {
-                google.maps.event.addListener(infowindow, 'closeclick', function() {
-                    circle.setVisible(false)
-                })
-                close_info_window()
-                infowindow.open(map, marker)
-                opened_info_window = infowindow
-                opened_circle = circle
-                circle.setVisible(true)
-                map.panTo(marker.getPosition())
-            });
-            return marker
-        }
-
-        function close_info_window() {
-            if (opened_info_window !== undefined)
-                opened_info_window.close();
-            if (opened_circle !== undefined)
-                opened_circle.setVisible(false);
-        }
-
-        function initialize() {
-            var mapOptions = {
-                center: { lat: 59.956406877802756, lng: 30.30924081802368},
-                zoom: 12
-            };
-            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions)
-
-            google.maps.event.addListener(map, 'click', function(pos) {
-                var x = pos.latLng.lat()
-                var y = pos.latLng.lng()
-                close_info_window()
-                gett(x, y, addImage)
-            });
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAJP2vvnMfxREJGAEPDQbEuno9njArzWSY"></script>
+    <script type="text/javascript" src="instagram.js"></script>
+    <script type="text/javascript" src="map.js"></script>
   </head>
+  
   <body>
-<div id="map-canvas"></div>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id="map-canvas"></div>
   </body>
+
 </html>
