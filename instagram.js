@@ -67,8 +67,13 @@ function getPictures(arr,lat,longt) {
 
 
     var popular = getTags(arr);
-    var str = "#" + popular[0][0] + " (" + popular[0][1]+ ")";
-    res += '</td><tr><td>Most popular tags: ' + str + '</td><tr>'
+    var tgs = [];
+    for (var i = 0;i<popular.length;i++) {
+        tgs[i] = "#" + popular[i][0] + " (" + popular[i][1]+")";
+    }
+    
+    //var str = "#" + popular[0][0] + " (" + popular[0][1]+ ")";
+    res += '</td><tr><td>Most popular tags: ' + tgs.slice(0,4).join(", ") + '</td><tr>';
     return res;
 }
 
