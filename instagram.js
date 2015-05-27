@@ -61,7 +61,7 @@ function getPictures(arr,lat,longt) {
 
     var res = '<table><tr><td class="theDiv">'
     //$('#theDiv').prepend($('<img>',{id:'theImg',src:urls[0].url}))
-    for (var i = 0; i< urls.length; i++) {
+    for (var i = 0; i < urls.length && i < 10; i++) {
         res += '<a href="' + arr[i].link + '" target="_blank"><img class="theImg" title="' + arr[i].likes.count + ' Likes" src=' + urls[i].url + '></img></a>'
     }
 
