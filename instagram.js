@@ -1,22 +1,26 @@
 //------ Workaround
-function gett(lat, longt, callF) {
+function gett(lat, longt, func) {
     var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&client_id=73e1055ac2ad4799887538583f2249ef";
     $.ajax({
         url: url,
         type: "GET",
-        async:true,
+        async: true,
         dataType: "jsonp",
-        success: callBackk(lat,longt,callF),
+        success: callBackk(lat,longt, func),
         error: show_error
     });
 }
 
-function callBackk(lat,longt,callF) {
-
+function callBackk(lat,longt, func) {
     return function (data, testStatus, request) {
-        getPictures(data,lat,longt,callF);
+        var res = getPictures(data,lat,longt);
+        if (res != -1) {
+            var marker = func(lat, longt, res)
+            setTimeout(function() {
+                google.maps.event.trigger(marker, 'click');
+            }, 600)
+        }
     };
-
 }
 
 function show_error() {
@@ -24,8 +28,8 @@ function show_error() {
 }
 
 //-----------
-function bubblesort(arr) {
-    //var arr = mass;
+function heapsort(mass) {
+    var arr = mass;
     for (var i = 0;i<arr.length;i++) {
         for (var j = 0; j<arr.length - i - 1; j++) {
             if (arr[j].likes.count < arr[j+1].likes.count){
@@ -37,33 +41,33 @@ function bubblesort(arr) {
     }
 }
 
-function getPictures(arr,lat,longt,callF) {
-    if (arr.meta.code!=200) show_error();
+function getPictures(arr,lat,longt) {
+    if (arr.meta.code!=200) {
+        //show_error();
+        return -1;
+    }
     arr = arr.data;
+    if (arr.length == 0)
+        return -1;
     var urls = [];
     console.log(arr.length);
-    bubblesort(arr);
-    
+
+    heapsort(arr);
     for (var i = 0;i<arr.length;i++) {
         urls[i] = arr[i].images.low_resolution;
-        console.log(urls[i].url);
-        console.log(arr[i].likes.count)
     }
-    /*for (var i = 0; i< 7; i++) {
-        $('#theDiv').append($('<img>',{class:'theImg',src:urls[i].url, title: arr[i].likes.count + " Likes"}))
-    }*/
+
+    var res = '<table><tr><td class="theDiv">'
+    //$('#theDiv').prepend($('<img>',{id:'theImg',src:urls[0].url}))
+    for (var i = 0; i< 7; i++) {
+        res += '<a href="' + urls[i].url + '"><img class="theImg" src=' + urls[i].url + '></img></a>'
+    }
+
 
     var popular = getTags(arr);
-    var tgs = [];
-    //var str = "#" + popular[0][0] + " (" + popular[0][1]+ ")";
-    for (var i = 0;i<popular.length;i++) {
-        tgs[i] = "#" + popular[i][0] + " (" + popular[i][1]+")";
-    }
-
-    callF(lat,longt,urls[0].url);
-    //$('table').append("<tr><td>Most polpular tags: " + tgs.slice(0,4).join(", ") + "</td></tr>")
-    //$('body').append($('<img>',{class:'theImg',src:urls[1].url}))
-    //$('body').append($('<img>',{class:'theImg',src:urls[2].url}))
+    var str = "#" + popular[0][0] + " (" + popular[0][1]+ ")";
+    res += '</td><tr><td>Most popular tags: ' + str + '</td><tr>'
+    return res;
 }
 
 function getTags(arr) {
@@ -78,6 +82,15 @@ function getTags(arr) {
             }
         }
     }
+    //Searching popular
+    /*var max = -1;
+    var str = "No popular";
+    for (var cc in gtags) {
+        if (gtags[cc] > max) {
+            max = gtags[cc];
+            str = cc;
+        }
+    };*/
 
 var sortable = [];
 for (var vehicle in gtags)
@@ -85,6 +98,3 @@ for (var vehicle in gtags)
     sortable.sort(function(a, b) {return b[1] - a[1]})
     return sortable;
 }
-
-//alert(10);
-//gett(48.858844,2.294351);
