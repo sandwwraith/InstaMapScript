@@ -78,7 +78,7 @@ function getPictures(arr, dist) {
     var popular = getTags(arr);
     var tgs = [];
     for (var i = 0; i < popular.length; i++) {
-        tgs[i] = "#" + popular[i][0] + " (" + popular[i][1] + ")";
+        tgs[i] = '<a href="http://websta.me/tag/' + encodeURI(popular[i][0]) + '?vm=grid3" target="_blank">#' + popular[i][0] + '</a>(' + popular[i][1] + ")";
     }
 
     res += '</td><tr><td>Most popular tags: ' + tgs.slice(0, 4).join(", ") + '</td><tr>';
