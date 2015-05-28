@@ -1,26 +1,35 @@
 
-function gett(lat, longt, func) {
-    var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&distance=2000&client_id=73e1055ac2ad4799887538583f2249ef";
+function gett(lat, longt, func, dist) {
+    if (dist === undefined) dist = 1000;
+    console.log("Dist: " + dist);
+    var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&distance=" + dist+ "&client_id=73e1055ac2ad4799887538583f2249ef";
     $.ajax({
         url: url,
         type: "GET",
         async: true,
         dataType: "jsonp",
-        success: callBackk(lat, longt, func),
+        success: callBackk(lat, longt, func, dist),
         error: show_error
     });
 }
 
-function callBackk(lat, longt, func) {
+function callBackk(lat, longt, func, dist) {
     return function (data, testStatus, request) {
-        var res = getPictures(data, lat, longt);
-         if (res == -1) {// No pics 
-             res =  "<b>Sorry, no photos in this location</b>";           
-        } else if (res == -2) {
-            res = "<b>Sorry, invalid response code from Instagram API</b>";
+        var res = getPictures(data, dist);
+         if (res.code == -1) {
+             // No pics
+             if (dist >= 5000) { 
+                res.str =  "<b>Sorry, no photos in this location</b>";
+             }  else {
+                 console.log("Increasing dist...");
+                 gett(lat,longt,func,dist+1000);
+                 return;
+             }         
+        } else if (res.code == -2) {
+            res.str = "<b>Sorry, invalid response code from Instagram API: " +res.return_code +  " </b>";
         }
         //Finally
-        var marker = func(lat, longt, res);
+        var marker = func(lat, longt, res.str);
             setTimeout(function () {
                 google.maps.event.trigger(marker, 'click');
             }, 600)
@@ -45,15 +54,15 @@ function bubblesort(mass) {
     }
 }
 
-function getPictures(arr, lat, longt) {
+function getPictures(arr, dist) {
     if (arr.meta.code != 200) {
-        return -2;
+        return {code: -2, return_code: arr.meta.code};
     }
     arr = arr.data;
-    if (arr.length == 0)
-        return -1;
-    var urls = [];
     console.log("Total pictures: " + arr.length);
+    if (arr.length == 0 || (arr.length < 10 && dist < 5000)) //No pictures or we can try to grab more
+        return {code: -1};
+    var urls = [];
 
     bubblesort(arr);
 
@@ -75,7 +84,7 @@ function getPictures(arr, lat, longt) {
     }
 
     res += '</td><tr><td>Most popular tags: ' + tgs.slice(0, 4).join(", ") + '</td><tr>';
-    return res;
+    return {str: res, code: 0};
 }
 
 function getTags(arr) {
