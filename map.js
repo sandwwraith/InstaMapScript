@@ -8,7 +8,7 @@ var map;
 var markers = [];
 var opened_info_window;
 var opened_circle;        //TODO: not good global vars, refactor
-function addImage(lat, lng, contentString) {
+function addImage(lat, lng, contentString, dist) {
     var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
                                           animation: google.maps.Animation.DROP,
                                           map: map,
@@ -20,7 +20,7 @@ function addImage(lat, lng, contentString) {
 
     var circle = new google.maps.Circle({center: marker.getPosition(),
                             map: map,
-                            radius: 2000,
+                            radius: dist,
                             visible: false,
                             fillColor: '#33B5E5',
                             strokeColor: '#0099CC',

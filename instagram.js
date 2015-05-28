@@ -29,7 +29,7 @@ function callBackk(lat, longt, func, dist) {
             res.str = "<b>Sorry, invalid response code from Instagram API: " +res.return_code +  " </b>";
         }
         //Finally
-        var marker = func(lat, longt, res.str);
+        var marker = func(lat, longt, res.str,dist);
             setTimeout(function () {
                 google.maps.event.trigger(marker, 'click');
             }, 600)
