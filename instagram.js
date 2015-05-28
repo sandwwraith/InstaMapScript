@@ -14,12 +14,16 @@ function gett(lat, longt, func) {
 function callBackk(lat, longt, func) {
     return function (data, testStatus, request) {
         var res = getPictures(data, lat, longt);
-        if (res != -1) {
-            var marker = func(lat, longt, res)
+         if (res == -1) {// No pics 
+             res =  "<b>Sorry, no photos in this location</b>";           
+        } else if (res == -2) {
+            res = "<b>Sorry, invalid response code from Instagram API</b>";
+        }
+        //Finally
+        var marker = func(lat, longt, res);
             setTimeout(function () {
                 google.maps.event.trigger(marker, 'click');
             }, 600)
-        }
     };
 }
 
@@ -43,7 +47,7 @@ function bubblesort(mass) {
 
 function getPictures(arr, lat, longt) {
     if (arr.meta.code != 200) {
-        return -1;
+        return -2;
     }
     arr = arr.data;
     if (arr.length == 0)
