@@ -1,7 +1,6 @@
 
 function gett(lat, longt, func, dist) {
     if (dist === undefined) dist = 1000;
-    console.log("Dist: " + dist);
     var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&distance=" + dist+ "&client_id=73e1055ac2ad4799887538583f2249ef";
     $.ajax({
         url: url,
@@ -21,7 +20,6 @@ function callBackk(lat, longt, func, dist) {
              if (dist >= 5000) { 
                 res.str =  "<b>Sorry, no photos in this location</b>";
              }  else {
-                 console.log("Increasing dist...");
                  gett(lat,longt,func,dist+1000);
                  return;
              }         
@@ -57,7 +55,6 @@ function getPictures(arr, dist) {
         return {code: -2, return_code: arr.meta.code};
     }
     arr = arr.data;
-    console.log("Total pictures: " + arr.length);
     if (arr.length == 0 || (arr.length < 10 && dist < 5000)) //No pictures or we can try to grab more
         return {code: -1};
     var urls = [];
@@ -78,7 +75,7 @@ function getPictures(arr, dist) {
     var popular = getTags(arr);
     var tgs = [];
     for (var i = 0; i < popular.length; i++) {
-        tgs[i] = "#" + popular[i][0] + " (" + popular[i][1] + ")";
+       tgs[i] = '<a href="http://websta.me/tag/' + encodeURI(popular[i][0]) + '?vm=grid3" target="_blank">#' + popular[i][0] + '</a>(' + popular[i][1] + ")";
     }
 
     res += '</td><tr><td>Most popular tags: ' + tgs.slice(0, 4).join(", ") + '</td><tr>';
