@@ -1,6 +1,7 @@
 
 function gett(lat, longt, func, dist) {
     if (dist === undefined) dist = 1000;
+    console.log("Dist: " + dist);
     var url = "https://api.instagram.com/v1/media/search?lat=" + lat + "&lng=" + longt + "&distance=" + dist+ "&client_id=73e1055ac2ad4799887538583f2249ef";
     $.ajax({
         url: url,
@@ -20,6 +21,7 @@ function callBackk(lat, longt, func, dist) {
              if (dist >= 5000) { 
                 res.str =  "<b>Sorry, no photos in this location</b>";
              }  else {
+                 console.log("Increasing dist...");
                  gett(lat,longt,func,dist+1000);
                  return;
              }         
@@ -27,10 +29,8 @@ function callBackk(lat, longt, func, dist) {
             res.str = "<b>Sorry, invalid response code from Instagram API: " +res.return_code +  " </b>";
         }
         //Finally
-        var marker = func(lat, longt, res.str,dist);
-            setTimeout(function () {
-                google.maps.event.trigger(marker, 'click');
-            }, 600)
+        func(res.str, dist);
+            
     };
 }
 
@@ -57,6 +57,7 @@ function getPictures(arr, dist) {
         return {code: -2, return_code: arr.meta.code};
     }
     arr = arr.data;
+    console.log("Total pictures: " + arr.length);
     if (arr.length == 0 || (arr.length < 10 && dist < 5000)) //No pictures or we can try to grab more
         return {code: -1};
     var urls = [];

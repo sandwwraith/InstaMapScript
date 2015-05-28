@@ -8,14 +8,14 @@ var map;
 var markers = [];
 var opened_info_window;
 var opened_circle;        //TODO: not good global vars, refactor
-function addImage(lat, lng, contentString, dist) {
+function addImage(lat, lng, dist) {
     var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
                                           animation: google.maps.Animation.DROP,
                                           map: map,
                                           });
 
     var infowindow = new google.maps.InfoWindow({
-        content: contentString
+        content: '<div>LOADING...</div>'
     });
 
     var circle = new google.maps.Circle({center: marker.getPosition(),
@@ -38,7 +38,12 @@ function addImage(lat, lng, contentString, dist) {
         circle.setVisible(true)
         map.panTo(marker.getPosition())
     });
-    return marker;
+    
+    setTimeout(function () {
+                google.maps.event.trigger(marker, 'click');
+     }, 600)
+    
+    return [infowindow, circle];
 }
 
 function close_info_window() {
@@ -107,7 +112,11 @@ function initialize() {
         var x = pos.latLng.lat()
         var y = pos.latLng.lng()
         close_info_window()
-        gett(x, y, addImage)
+        var data = addImage(x, y, 1000)
+        gett(x, y, function(content, radius) {
+            data[0].setContent(content)
+            data[1].setRadius(radius)
+        })
     });
 }
 google.maps.event.addDomListener(window, 'load', initialize);
