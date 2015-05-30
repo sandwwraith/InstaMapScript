@@ -15,7 +15,7 @@ function addImage(lat, lng, dist) {
                                           });
 
     var infowindow = new google.maps.InfoWindow({
-        content: '<div>LOADING...</div>'
+        content: '<table><tr><td class="spinner"></td><td>LOADING...</td></tr></table>'
     });
 
     var circle = new google.maps.Circle({center: marker.getPosition(),
@@ -54,14 +54,34 @@ function close_info_window() {
         opened_circle.setVisible(false);
 }
 
+function getLoc(map) {
+    var coords = new google.maps.LatLng(59.956406877802756,30.30924081802368);
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            console.log("Get");
+            map.setCenter(coords);
+        }, function () {
+                map.setCenter(coords);
+                    console.log("Didn't Get");
+            });
+    }
+    else {
+        map.setCenter(coords);
+            console.log("Browser doesn't support Geolocation");
+    }
+}
+
 function initialize() {
     var mapOptions = {
-        center: { lat: 59.956406877802756, lng: 30.30924081802368},
+        //center: { lat: 59.956406877802756, lng: 30.30924081802368},
         zoom: 12,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        streetViewControl: false
     };
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
+    getLoc(map);
     var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
