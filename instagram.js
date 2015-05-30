@@ -80,8 +80,13 @@ function getPictures(arr, dist) {
     for (var i = 0; i < popular.length; i++) {
         tgs[i] = '<a href="http://websta.me/tag/' + encodeURI(popular[i][0]) + '?vm=grid3" target="_blank">#' + popular[i][0] + '</a>(' + popular[i][1] + ")";
     }
-
-    res += '</td><tr><td>Most popular tags: ' + tgs.slice(0, 4).join(", ") + '</td><tr>';
+    
+    if (tgs.length > 0) {
+        res += '</td><tr><td>Most popular tags: ' + tgs.slice(0, 4).join(", ") + '</td><tr>';
+    } else {
+        res += '</td><tr><td>Oops, no tags :(</td></tr>';
+    }
+    res+='</table>';
     return {str: res, code: 0};
 }
 
