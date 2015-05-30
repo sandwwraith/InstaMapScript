@@ -25,6 +25,7 @@ function addImage(lat, lng, dist) {
                             fillColor: '#33B5E5',
                             strokeColor: '#0099CC',
                             strokeWeight: 2,
+                            clickable: false,
                             strokeOpacity: 0.8});
 
     google.maps.event.addListener(marker, 'click', function() {
