@@ -15,7 +15,7 @@ function addImage(lat, lng, dist) {
                                           });
 
     var infowindow = new google.maps.InfoWindow({
-        content: '<div>LOADING...</div>'
+        content: '<table><tr><td class="spinner"></td><td>LOADING...</td></tr></table>'
     });
 
     var circle = new google.maps.Circle({center: marker.getPosition(),
