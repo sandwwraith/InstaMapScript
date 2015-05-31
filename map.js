@@ -32,26 +32,27 @@ function addImage(lat, lng, dist) {
         google.maps.event.addListener(infowindow, 'closeclick', function() {
             circle.setVisible(false)
         });
-        close_info_window()
+        close_info_window(infowindow)
         infowindow.open(map, marker)
         opened_info_window = infowindow
         opened_circle = circle
         circle.setVisible(true)
-        map.panTo(marker.getPosition())
     });
     
     setTimeout(function () {
                 google.maps.event.trigger(marker, 'click');
      }, 600)
     
-    return [infowindow, circle];
+    return [infowindow, circle, marker];
 }
 
-function close_info_window() {
-    if (opened_info_window !== undefined)
-        opened_info_window.close();
-    if (opened_circle !== undefined)
-        opened_circle.setVisible(false);
+function close_info_window(infowindow) {
+    if (opened_info_window !== infowindow) {
+        if (opened_info_window !== undefined)
+            opened_info_window.close();
+        if (opened_circle !== undefined)
+            opened_circle.setVisible(false);
+    }
 }
 
 function getLoc(map) {
@@ -64,7 +65,7 @@ function getLoc(map) {
             map.setCenter(coords);
         }, function () {
                 map.setCenter(coords);
-                    console.log("Didn't Get");
+                console.log("Didn't Get");
             });
     }
     else {
@@ -137,6 +138,8 @@ function initialize() {
         gett(x, y, function(content, radius) {
             data[0].setContent(content)
             data[1].setRadius(radius)
+            map.panTo(pos.latLng)
+            data[0].open(map, data[2])
         })
     });
 }
