@@ -13,11 +13,19 @@ html, body, #map-canvas {
     text-align:center;
 }
 
+@font-face {
+  font-family: "Schlange Sans Bold";
+  src: url("http://www.ifmo.ru/fonts/Schlange/ALSSchlangesans-Bold.otf") format("opentype");
+}
+
 .credits {
     text-align:center;
-    font-size: 200%;
-    background-color: #0000FF;
+    border: 1px solid;
+    border-color: #A0A0FF;
+    background-color: #7070FF;
+    font: 200% Schlange Sans Bold;
     color: #fff;
+    margin-bottom: 0;
     line-height: 130%;
 }
 
