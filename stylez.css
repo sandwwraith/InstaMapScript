@@ -21,6 +21,10 @@ html, body, #map-canvas {
     line-height: 130%;
 }
 
+.creditslink:link {
+  color: #fff
+}
+
 .creditslink:visited {
   color: #fff
 }
