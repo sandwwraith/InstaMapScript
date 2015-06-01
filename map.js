@@ -119,7 +119,8 @@ function initialize() {
     var mapOptions = {
         zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        streetViewControl: false
+        streetViewControl: false,
+        mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
     };
     
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
