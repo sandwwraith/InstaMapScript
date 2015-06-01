@@ -8,6 +8,8 @@ var map;
 var markers = [];
 var opened_info_window;
 var opened_circle;        //TODO: not good global vars, refactor
+var lastMarker;
+
 function addImage(lat, lng, dist) {
     var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
                                           animation: google.maps.Animation.DROP,
@@ -39,9 +41,14 @@ function addImage(lat, lng, dist) {
         circle.setVisible(true)
     });
     
-    setTimeout(function () {
+    infowindow.open(map, marker);
+    opened_info_window = infowindow;
+    google.maps.event.addListener(infowindow, 'closeclick', function() {
+            opened_info_window = undefined;
+        });        
+    /*setTimeout(function () {
                 google.maps.event.trigger(marker, 'click');
-     }, 600)
+     }, 600)*/
     
     return [infowindow, circle, marker];
 }
@@ -135,12 +142,20 @@ function initialize() {
         var y = pos.latLng.lng()
         close_info_window()
         var data = addImage(x, y, 1000)
+        lastMarker = data[2];
         gett(x, y, function(content, radius) {
             data[0].setContent(content)
             data[1].setRadius(radius)
-            map.panTo(pos.latLng)
-            data[0].open(map, data[2])
-        })
+            setTimeout(function () {
+                     //Someone can close "Loading" window, so we shouldn't do anything
+                    if (opened_info_window == data[0])
+                    //Opening infoWindow also fits it to map
+                    //data[0].open(map, lastMarker)
+                    // ... but not close others.
+                    google.maps.event.trigger(lastMarker, 'click');
+                }, 500); //Waiting for pics to load
+           
+        });
     });
 }
 google.maps.event.addDomListener(window, 'load', initialize);
