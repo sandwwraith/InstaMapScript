@@ -13,6 +13,18 @@ html, body, #map-canvas {
     text-align:center;
 }
 
+.credits {
+    text-align:center;
+    font-size: 200%;
+    background-color: #0000FF;
+    color: #fff;
+    line-height: 130%;
+}
+
+.creditslink:visited {
+  color: #fff
+}
+
 .likes_pop {
     display: none;
 } 
