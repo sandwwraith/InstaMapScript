@@ -10,6 +10,45 @@ var opened_info_window;
 var opened_circle;        //TODO: not good global vars, refactor
 var lastMarker;
 
+function searchPlacesChangedGetter(searchBox) {
+    return function () {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+            return;
+        }
+
+        for (var i = 0, marker; marker = markers[i]; i++) {
+            marker.setMap(null);
+        }
+
+        // For each place, get the icon, place name, and location.
+        markers = [];
+        var bounds = new google.maps.LatLngBounds();
+        for (var i = 0, place; place = places[i]; i++) {
+            var image = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            var marker = new google.maps.Marker({
+                map: map,
+                icon: image,
+                title: place.name,
+                position: place.geometry.location
+            });
+
+            markers.push(marker);
+            bounds.extend(place.geometry.location);
+        }
+        map.fitBounds(bounds);
+    };
+}
+
 function addImage(lat, lng, dist) {
     var marker = new google.maps.Marker({position: {lat: lat, lng: lng},
                                           animation: google.maps.Animation.DROP,
@@ -46,10 +85,7 @@ function addImage(lat, lng, dist) {
     google.maps.event.addListener(infowindow, 'closeclick', function() {
             opened_info_window = undefined;
         });        
-    /*setTimeout(function () {
-                google.maps.event.trigger(marker, 'click');
-     }, 600)*/
-    
+        
     return [infowindow, circle, marker];
 }
 
@@ -63,8 +99,8 @@ function close_info_window(infowindow) {
 }
 
 function getLoc(map) {
-    var coords = new google.maps.LatLng(59.956406877802756,30.30924081802368);
-    
+    var coords = new google.maps.LatLng(59.956406877802756, 30.30924081802368);
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -74,68 +110,29 @@ function getLoc(map) {
                 map.setCenter(coords);
                 console.log("Didn't Get");
             });
-    }
-    else {
+    } else {
         map.setCenter(coords);
-            console.log("Browser doesn't support Geolocation");
+        console.log("Browser doesn't support Geolocation");
     }
 }
 
 function initialize() {
     var mapOptions = {
-        //center: { lat: 59.956406877802756, lng: 30.30924081802368},
         zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         streetViewControl: false
     };
+    
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     getLoc(map);
-    var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
+    
+    var input = (document.getElementById('pac-input'));
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-    var searchBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(input));
+    var searchBox = new google.maps.places.SearchBox((input));
 
     // Listen for the event fired when the user selects an item from the
     // pick list. Retrieve the matching places for that item.
-    google.maps.event.addListener(searchBox, 'places_changed', function() {
-        var places = searchBox.getPlaces();
-
-        if (places.length == 0) {
-            return;
-        }
-
-        for (var i = 0, marker; marker = markers[i]; i++) {
-            marker.setMap(null);
-        }
-
-        // For each place, get the icon, place name, and location.
-        markers = [];
-        var bounds = new google.maps.LatLngBounds();
-        for (var i = 0, place; place = places[i]; i++) {
-            var image = {
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25)
-            };
-
-            // Create a marker for each place.
-            var marker = new google.maps.Marker({
-                map: map,
-                icon: image,
-                title: place.name,
-                position: place.geometry.location
-            });
-
-            markers.push(marker);
-
-            bounds.extend(place.geometry.location);
-        }
-
-        map.fitBounds(bounds);
-    });
-
+    google.maps.event.addListener(searchBox, 'places_changed', searchPlacesChangedGetter(searchBox));
 
     google.maps.event.addListener(map, 'click', function(pos) {
         var x = pos.latLng.lat()
@@ -149,13 +146,10 @@ function initialize() {
             setTimeout(function () {
                      //Someone can close "Loading" window, so we shouldn't do anything
                     if (opened_info_window == data[0])
-                    //Opening infoWindow also fits it to map
-                    //data[0].open(map, lastMarker)
-                    // ... but not close others.
-                    google.maps.event.trigger(lastMarker, 'click');
+                        google.maps.event.trigger(lastMarker, 'click');
                 }, 500); //Waiting for pics to load
-           
+            });
         });
-    });
 }
+
 google.maps.event.addDomListener(window, 'load', initialize);
