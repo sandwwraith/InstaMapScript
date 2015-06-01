@@ -8,7 +8,6 @@ var map;
 var markers = [];
 var opened_info_window;
 var opened_circle;        //TODO: not good global vars, refactor
-var lastMarker;
 
 function searchPlacesChangedGetter(searchBox) {
     return function () {
@@ -139,14 +138,13 @@ function initialize() {
         var y = pos.latLng.lng()
         close_info_window()
         var data = addImage(x, y, 1000)
-        lastMarker = data[2];
         gett(x, y, function(content, radius) {
             data[0].setContent(content)
             data[1].setRadius(radius)
             setTimeout(function () {
                      //Someone can close "Loading" window, so we shouldn't do anything
                     if (opened_info_window == data[0])
-                        google.maps.event.trigger(lastMarker, 'click');
+                        google.maps.event.trigger(data[2], 'click');
                 }, 500); //Waiting for pics to load
             });
         });
