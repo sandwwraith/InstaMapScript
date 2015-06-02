@@ -142,11 +142,11 @@ body {
    margin-top: 5px;
    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
  }
- a{
+ .creditslink{
  text-decoration: none;
  color: #EAEAEA !important;
  }
- a:hover{
+ .creditslink:hover{
  text-decoration: underline;
  color: #fff !important ;
  }
