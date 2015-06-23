@@ -102,7 +102,7 @@ body {
  .wrap{
    position:relative;
    width:100%;
-   height:auto;
+   height: 3%;
    margin:auto;
    background:#666666;
    overflow:hidden;
