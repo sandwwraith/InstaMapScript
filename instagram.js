@@ -38,20 +38,6 @@ function show_error() {
     alert("Something went wrong, sorry....");
 }
 
-//-----------
-function bubblesort(mass) {
-    var arr = mass;
-    for (var i = 0; i < arr.length; i++) {
-        for (var j = 0; j < arr.length - i - 1; j++) {
-            if (arr[j].likes.count < arr[j + 1].likes.count) {
-                var t = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = t;
-            }
-        }
-    }
-}
-
 function getPictures(arr, dist) {
     if (arr.meta.code != 200) {
         return {code: -2, return_code: arr.meta.code};
@@ -62,7 +48,10 @@ function getPictures(arr, dist) {
         return {code: -1};
     var urls = [];
 
-    bubblesort(arr);
+    //Sorting by likes
+    arr.sort(function (a,b) {
+       return b.likes.count-a.likes.count; 
+    });
 
     for (var i = 0; i < arr.length; i++) {
         urls[i] = arr[i].images.low_resolution;
