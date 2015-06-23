@@ -136,15 +136,23 @@ body {
    border-radius:0 0 0 5px;
  }
  h1{
-   text-align: center;
-   font-size: 15px;
+   text-align: left;
+   font-size: 12px;
    font-weight: bold;
    margin-top: 5px;
+   margin-left: 3px;
    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
  }
  .creditslink{
  text-decoration: none;
  color: #EAEAEA !important;
+ }
+ 
+ .sourcelink{
+ text-decoration: none;
+ color: #EAEAEA !important;
+ text-align: right;
+ font-style: italic;
  }
  .creditslink:hover{
  text-decoration: underline;
