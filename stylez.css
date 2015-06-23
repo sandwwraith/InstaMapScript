@@ -140,7 +140,7 @@ body {
    font-size: 12px;
    font-weight: bold;
    margin-top: 5px;
-   margin-left: 3px;
+   margin-left: 5px;
    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
  }
  .creditslink{
@@ -152,6 +152,8 @@ body {
  text-decoration: none;
  color: #EAEAEA !important;
  text-align: right;
+ float: right;
+ margin-right: 25px;
  font-style: italic;
  }
  .creditslink:hover{
