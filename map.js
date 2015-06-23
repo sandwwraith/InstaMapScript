@@ -108,10 +108,11 @@ function getLoc(map) {
         }, function () {
                 console.log("Didn't Get");
             });
+    } else {
+        console.log("Browser doesn't support Geolocation");
     }
 
     map.setCenter(coords);
-    console.log("Browser doesn't support Geolocation");
 }
 
 function initialize() {
