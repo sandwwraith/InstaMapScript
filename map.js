@@ -100,16 +100,17 @@ function close_info_window(infowindow) {
 function getLoc(map) {
     var coords = new google.maps.LatLng(59.956406877802756, 30.30924081802368);
 
-    if (navigator.geolocation) {
+    if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function (position) {
             coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             map.setCenter(coords);
         }, function () {
-                map.setCenter(coords);
+                console.log("Didn't Get");
             });
     } else {
-        map.setCenter(coords);
+        console.log("Browser doesn't support Geolocation");
     }
+    map.setCenter(coords);
 }
 
 function initialize() {
